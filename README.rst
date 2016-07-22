@@ -1,7 +1,9 @@
 Unbound
 #######
 
-Provision the Unbound DNS resolver.
+Provision the Unbound DNS resolver. The configuration from this role is log to
+syslog, DNSSEC and use the conf.d directory. To add your own configuration, add
+a template at :code:`template/unbound/conf.d/*.conf`.
 
 Requirements
 ------------
@@ -51,16 +53,3 @@ Nimrod Adar, `contact me <nimrod@shore.co.il>`_ or visit my `website
 <https://www.shore.co.il/>`_. Patches are welcome via `git send-email
 <http://git-scm.com/book/en/v2/Git-Commands-Email>`_. The repository is located
 at: https://www.shore.co.il/git/.
-
-TODO
-----
-
-- Download DNS root hints, DNSSEC anchor.
-- Update DNSSEC root anchor weekly.
-- Alias email to root.
-- Create, use conf.d directory.
-- Log to syslog.
-- At the end flush handlers and wait for service to start.
-- Use dhparams.
-- Assertions.
-- Tests.

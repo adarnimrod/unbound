@@ -1,2 +1,10 @@
 ---
 # handlers file for ansible-role-unbound
+- name: Restart Unbound
+  service:
+      name: unbound
+      state: restarted
+
+- name: Update SMTPd database
+  when: ansible_os_family == 'OpenBSD'
+  command: /usr/bin/newaliases

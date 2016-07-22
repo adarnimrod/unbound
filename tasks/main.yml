@@ -1,7 +1,82 @@
 ---
 # tasks file for ansible-role-unbound
-
 - assert:
     that:
-        - ansible_os_family == 'OpenBSD'
-        - ansible_distribution_release == '5.9'
+        - ansible_os_family in ['OpenBSD', 'Debian']
+
+- name: APT install
+  when: ansible_pkg_mgr == 'apt'
+  with_items:
+      - unbound
+      - unbound-anchor
+  apt:
+      name: '{{ item }}'
+      state: present
+      update_cache: yes
+      cache_valid_time: 3600
+
+- name: Download DNSSEC root anchor
+  command: '/usr/sbin/unbound-anchor -a {{ unbound_trust_anchor }}'
+  register: unbound_anchor
+  changed_when: unbound_anchor.rc == 1
+  failed_when: unbound_anchor|failed and not unbound_anchor.rc == 1
+  notify:
+    - Restart Unbound
+
+- name: Create conf.d directory
+  file:
+      path: '{{ unbound_conf_d }}'
+      state: directory
+      owner: root
+      group: 0
+      mode: 0o0755
+
+- name: Include conf.d/*
+  lineinfile:
+      line: 'include: "{{ unbound_conf_d }}/*.conf"'
+      dest: '{{ unbound_conf }}'
+      insertbefore: BOF
+      state: present
+  notify:
+      - Restart Unbound
+
+- name: Copy configuration templates
+  with_fileglob:
+      - templates/unbound/conf.d/*.conf
+  template:
+      src: '{{ item }}'
+      dest: '{{ unbound_conf_d }}'
+      owner: root
+      group: 0
+      mode: 0o0644
+  notify:
+      - Restart Unbound
+
+- name: Update root DNSSEC root anchor weekly
+  cron:
+      name: Update DNSSEC root anchor
+      user: root
+      job: '/usr/sbin/unbound-anchor -a {{ unbound_trust_anchor }}/root.hint | logger || /etc/rc.d/unbound restart | logger'
+      state: present
+      special_time: weekly
+
+- name: Alias emails to root
+  lineinfile:
+      dest: '{{ aliases_file[ansible_os_family] }}'
+      create: yes
+      line: '{{ unbound_user[ansible_os_family] }}: root'
+      regexp: '{{ unbound_user[ansible_os_family] }}:'
+  notify:
+      - Update SMTPd database
+
+- name: Enable service
+  service:
+      name: unbound
+      enabled: yes
+      state: started
+
+- meta: flush_handlers
+
+- name: Wait for service to recieve requests
+  wait_for:
+      port: 53

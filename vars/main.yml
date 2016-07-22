@@ -1,2 +1,14 @@
 ---
 # vars file for ansible-role-unbound
+
+aliases_file:
+    OpenBSD: /etc/mail/aliases
+    Debian: /etc/aliases
+
+unbound_user:
+    OpenBSD: _unbound
+    Debian: unbound
+
+unbound_conf: '{{ "/var/unbound/etc/unbound.conf" if ansible_os_family == "OpenBSD" else "/etc/unbound/unbound.conf" }}'
+unbound_conf_d: '{{ unbound_conf }}.d'
+unbound_trust_anchor: '{{ unbound_conf|dirname }}/root.key'

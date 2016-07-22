@@ -1,5 +1,7 @@
 ---
-- hosts: all
+- hosts: ansible-role-unbound-openbsd
   gather_facts: false
-  roles:
-    - role: ansible-role-unbound
+  roles: [ansible-role-openbsd-bootstrap]
+
+- hosts: all
+  roles: [ansible-role-unbound]
