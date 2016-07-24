@@ -43,6 +43,7 @@
 - name: Copy configuration templates
   with_fileglob:
       - templates/unbound/conf.d/*.conf
+      - '{{ playbook_dir }}/templates/unbound/conf.d/*.conf'
   template:
       src: '{{ item }}'
       dest: '{{ unbound_conf_d }}'
