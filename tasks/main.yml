@@ -62,10 +62,11 @@
       special_time: weekly
 
 - name: Alias emails to root
+  when: unbound_mail_alias is defined
   lineinfile:
       dest: '{{ aliases_file[ansible_os_family] }}'
       create: yes
-      line: '{{ unbound_user[ansible_os_family] }}: root'
+      line: '{{ unbound_user[ansible_os_family] }}: {{ unbound_mail_alias }}'
       regexp: '{{ unbound_user[ansible_os_family] }}:'
   notify:
       - Update SMTPd database
