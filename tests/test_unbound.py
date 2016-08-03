@@ -1,5 +1,6 @@
 def test_unbound_config(Command, Sudo):
-    assert Command('unbound-checkconf').rc == 0
+    with Sudo():
+        assert Command('unbound-checkconf').rc == 0
 
 
 def test_unbound_service(Service):
