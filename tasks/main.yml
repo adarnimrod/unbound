@@ -1,6 +1,7 @@
 ---
 # tasks file for ansible-role-unbound
-- assert:
+- name: Assertions
+  assert:
     that:
         - ansible_os_family in ['OpenBSD', 'Debian']
 
