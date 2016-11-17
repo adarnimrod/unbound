@@ -7,6 +7,7 @@ galaxy_info:
   platforms:
   - name: OpenBSD
     versions:
+    - 6.0
     - 5.9
   - name: Debian
     versions:
