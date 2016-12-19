@@ -12,6 +12,7 @@
   with_items:
       - unbound
       - unbound-anchor
+      - cron
   apt:
       name: '{{ item }}'
       state: present
