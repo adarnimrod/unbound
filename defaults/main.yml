@@ -1,3 +1,4 @@
 ---
-# defaults file for ansible-role-unbound
+# defaults file for unbound
+
 unbound_mail_alias: root

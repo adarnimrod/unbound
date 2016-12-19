@@ -1,5 +1,5 @@
 ---
-# vars file for ansible-role-unbound
+# vars file for unbound
 
 aliases_file:
     OpenBSD: /etc/mail/aliases

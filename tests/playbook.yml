@@ -1,7 +1,13 @@
 ---
-- hosts: ansible-role-unbound-openbsd
+- hosts: unbound-openbsd
   gather_facts: false
-  roles: [openbsd_bootstrap]
+  roles: [openbsd-bootstrap]
+
+- hosts: unbound-xenial
+  gather_facts: false
+  roles: [debian-bootstrap]
 
 - hosts: all
-  roles: [ansible-role-unbound]
+  strategy: free
+  roles:
+    - role: unbound

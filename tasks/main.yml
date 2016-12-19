@@ -1,9 +1,11 @@
 ---
-# tasks file for ansible-role-unbound
+# tasks file for unbound
+
 - name: Assertions
   assert:
     that:
-        - ansible_os_family in ['OpenBSD', 'Debian']
+        - ansible_os_family in aliases_file
+        - ansible_os_family in unbound_user
 
 - name: APT install
   when: ansible_pkg_mgr == 'apt'
