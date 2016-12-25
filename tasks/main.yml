@@ -54,6 +54,7 @@
       owner: root
       group: 0
       mode: 0o0644
+      validate: unbound-checkconf
   notify:
       - Restart Unbound
 
