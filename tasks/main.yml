@@ -54,7 +54,6 @@
       owner: root
       group: 0
       mode: 0o0644
-      validate: unbound-checkconf
   notify:
       - Restart Unbound
 
@@ -75,6 +74,10 @@
       regexp: '{{ unbound_user[ansible_os_family] }}:'
   notify:
       - Update SMTPd database
+
+- name: Validate config
+  command: unbound-checkconf
+  changed_when: False
 
 - name: Enable service
   service:
